@@ -2,6 +2,7 @@ const Booking = require("../models/Booking");
 const User = require("../models/User");
 const Vehicle = require("../models/Vehicle");
 const logActivity = require("../utils/activityLogger");
+const checkAndCompleteBookings = require("../utils/bookingUpdater");
 
 // Create booking
 const createBooking = async (req, res) => {
@@ -58,6 +59,9 @@ const createBooking = async (req, res) => {
 // Get current user's bookings
 const getMyBookings = async (req, res) => {
   try {
+    // Run updater to ensure records are fresh before listing
+    await checkAndCompleteBookings();
+
     const bookings = await Booking.find({ user: req.user, status: { $ne: "Cancelled" } }).populate("vehicle");
     res.status(200).json(bookings);
   } catch (error) {
@@ -115,7 +119,16 @@ const payBooking = async (req, res) => {
       return res.status(401).json({ message: "Not authorized" });
     }
 
-    booking.status = "Paid";
+    const now = new Date();
+    if (booking.endDate < now) {
+      booking.status = "Completed";
+      if (booking.vehicle) {
+        const vehicleId = booking.vehicle._id || booking.vehicle;
+        await Vehicle.findByIdAndUpdate(vehicleId, { available: true });
+      }
+    } else {
+      booking.status = "Paid";
+    }
     await booking.save();
 
     const user = await User.findById(req.user);

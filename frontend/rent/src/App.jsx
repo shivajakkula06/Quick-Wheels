@@ -11,6 +11,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Scanner from "./pages/Scanner";
+import ContactUs from "./pages/ContactUs";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/scanner" element={<Scanner />} />
+          <Route path="/contact" element={<ContactUs />} />
         </Routes>
       </main>
 

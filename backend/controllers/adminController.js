@@ -1,11 +1,12 @@
 const User = require("../models/User");
 const Vehicle = require("../models/Vehicle");
 const Booking = require("../models/Booking");
+const checkAndCompleteBookings = require("../utils/bookingUpdater");
 
 // Dashboard Statistics
 exports.getDashboard = async (req, res) => {
     try {
-
+        await checkAndCompleteBookings();
         const totalUsers = await User.countDocuments();
 
         const totalVehicles = await Vehicle.countDocuments();
@@ -48,7 +49,7 @@ exports.getUsers = async (req, res) => {
 // Get All Bookings
 exports.getBookings = async (req, res) => {
     try {
-
+        await checkAndCompleteBookings();
         const bookings = await Booking.find()
             .populate("user", "name email")
             .populate("vehicle");

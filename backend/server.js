@@ -9,6 +9,7 @@ const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const vehicleRoutes = require("./routes/vehicleRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
+const checkAndCompleteBookings = require("./utils/bookingUpdater");
 
 const app = express();
 
@@ -35,4 +36,8 @@ const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
     console.log(`Server Running on http://localhost:${PORT}`);
+    
+    // Start background checks for expired bookings
+    checkAndCompleteBookings();
+    setInterval(checkAndCompleteBookings, 60000);
 });

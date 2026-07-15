@@ -1,4 +1,5 @@
 const Vehicle = require("../models/Vehicle");
+const checkAndCompleteBookings = require("../utils/bookingUpdater");
 
 // Add Vehicle
 exports.addVehicle = async (req, res) => {
@@ -13,6 +14,7 @@ exports.addVehicle = async (req, res) => {
 // Get All Vehicles
 exports.getVehicles = async (req, res) => {
     try {
+        await checkAndCompleteBookings();
         const vehicles = await Vehicle.find();
         res.json(vehicles);
     } catch (error) {
@@ -23,6 +25,7 @@ exports.getVehicles = async (req, res) => {
 // Get Vehicle By ID
 exports.getVehicleById = async (req, res) => {
     try {
+        await checkAndCompleteBookings();
         const vehicle = await Vehicle.findById(req.params.id);
 
         if (!vehicle) {

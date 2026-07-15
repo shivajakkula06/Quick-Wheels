@@ -36,6 +36,10 @@ function Navbar() {
           <Link to="/admin" className="hover:text-green-400 transition-colors font-medium text-blue-400">
             Admin Panel
           </Link>
+
+          <Link to="/contact" className="hover:text-green-400 transition-colors font-medium text-amber-400">
+            Contact Us
+          </Link>
         </div>
 
         {/* Auth Section */}

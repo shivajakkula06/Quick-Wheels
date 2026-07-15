@@ -17,7 +17,7 @@ function Home() {
           throw new Error("Failed to fetch vehicles");
         }
         const data = await response.json();
-        
+
         // Map database pricing/ID fields to keep compatibility with existing components
         const mappedData = data.map((v) => ({
           id: v._id,
@@ -28,7 +28,7 @@ function Home() {
           image: v.image,
           available: v.available
         }));
-        
+
         setVehicles(mappedData);
         setBackendStatus("connected");
       } catch (err) {
@@ -52,7 +52,7 @@ function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-100 py-10 px-6">
       <div className="max-w-7xl mx-auto bg-white rounded-3xl shadow-2xl p-8 animate-fadeIn">
-        
+
         {/* Status Indicator */}
         <div className="flex justify-end mb-4">
           {backendStatus === "connected" ? (
@@ -85,6 +85,20 @@ function Home() {
               Choose from a wide range of cars and bikes.
               Book your favourite vehicle safely and at affordable prices.
             </p>
+
+            {/* Location Information */}
+            <div className="mt-6 flex items-center gap-3 bg-green-50 border border-green-200 rounded-2xl p-4 w-fit shadow-sm">
+              <div className="p-2 bg-green-600 rounded-xl text-white">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-wider text-green-700 font-extrabold">Vehicle Available Location</p>
+                <p className="text-slate-800 font-bold text-base">Yamnampet, Ghatkesar</p>
+              </div>
+            </div>
 
             <button className="mt-6 bg-green-600 text-white px-6 py-3 rounded-xl hover:bg-green-700 hover:scale-105 transition duration-300 shadow-lg cursor-pointer">
               Explore Vehicles
