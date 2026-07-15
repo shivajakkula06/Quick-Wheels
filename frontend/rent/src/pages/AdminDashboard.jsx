@@ -44,15 +44,20 @@ function AdminDashboard() {
     setError("");
     try {
       // 1. Fetch Stats
-      const statsRes = await fetch("http://localhost:5000/api/admin/dashboard", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const statsRes = await fetch(
+        "https://quick-wheels-oua9.onrender.com/api/admin/dashboard",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
       if (!statsRes.ok) throw new Error("Failed to fetch dashboard stats");
       const statsData = await statsRes.json();
       setStats(statsData);
 
       // 2. Fetch Vehicles
-      const vehiclesRes = await fetch("http://localhost:5000/api/vehicles");
+      const vehiclesRes = await fetch(
+        "https://quick-wheels-oua9.onrender.com/api/vehicles",
+      );
       if (!vehiclesRes.ok) throw new Error("Failed to fetch vehicles");
       const vehiclesData = await vehiclesRes.json();
       setVehicles(
@@ -64,25 +69,30 @@ function AdminDashboard() {
           price: v.pricePerDay,
           image: v.image,
           available: v.available,
-        }))
+        })),
       );
 
       // 3. Fetch Bookings
-      const bookingsRes = await fetch("http://localhost:5000/api/admin/bookings", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const bookingsRes = await fetch(
+        "https://quick-wheels-oua9.onrender.com/api/admin/bookings",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
       if (!bookingsRes.ok) throw new Error("Failed to fetch bookings");
       const bookingsData = await bookingsRes.json();
       setBookings(bookingsData);
 
       // 4. Fetch Activities
-      const activitiesRes = await fetch("http://localhost:5000/api/admin/activities", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const activitiesRes = await fetch(
+        "https://quick-wheels-oua9.onrender.com/api/admin/activities",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
       if (!activitiesRes.ok) throw new Error("Failed to fetch activities");
       const activitiesData = await activitiesRes.json();
       setActivities(activitiesData);
-
     } catch (err) {
       setError(err.message);
     } finally {
@@ -121,21 +131,24 @@ function AdminDashboard() {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/vehicles", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        "https://quick-wheels-oua9.onrender.com/api/vehicles",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            name,
+            brand,
+            type,
+            pricePerDay: Number(pricePerDay),
+            image,
+            available: true,
+          }),
         },
-        body: JSON.stringify({
-          name,
-          brand,
-          type,
-          pricePerDay: Number(pricePerDay),
-          image,
-          available: true,
-        }),
-      });
+      );
 
       if (!response.ok) throw new Error("Failed to add vehicle");
       alert("Vehicle added successfully!");
@@ -146,13 +159,17 @@ function AdminDashboard() {
   };
 
   const deleteVehicle = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this vehicle?")) return;
+    if (!window.confirm("Are you sure you want to delete this vehicle?"))
+      return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/vehicles/${id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await fetch(
+        `https://quick-wheels-oua9.onrender.com/api/vehicles/${id}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
 
       if (!response.ok) throw new Error("Failed to delete vehicle");
       alert("Vehicle deleted successfully!");
@@ -165,21 +182,24 @@ function AdminDashboard() {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:5000/api/vehicles/${editingVehicle.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        `https://quick-wheels-oua9.onrender.com/api/vehicles/${editingVehicle.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            name: editingVehicle.name,
+            brand: editingVehicle.brand,
+            type: editingVehicle.type,
+            pricePerDay: Number(editingVehicle.price),
+            image: editingVehicle.image,
+            available: editingVehicle.available,
+          }),
         },
-        body: JSON.stringify({
-          name: editingVehicle.name,
-          brand: editingVehicle.brand,
-          type: editingVehicle.type,
-          pricePerDay: Number(editingVehicle.price),
-          image: editingVehicle.image,
-          available: editingVehicle.available,
-        }),
-      });
+      );
 
       if (!response.ok) throw new Error("Failed to update vehicle");
       alert("Vehicle updated successfully!");
@@ -207,13 +227,26 @@ function AdminDashboard() {
       <div className="min-h-screen bg-slate-950 py-20 px-6 flex items-center justify-center">
         <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 max-w-md w-full shadow-2xl animate-fadeIn text-center">
           <div className="w-16 h-16 bg-red-950 border border-red-500 rounded-full flex items-center justify-center mx-auto mb-6 text-red-500 animate-pulse">
-            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            <svg
+              className="w-8 h-8"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+              />
             </svg>
           </div>
-          <h1 className="text-2xl font-black text-white">Admin Security Access</h1>
+          <h1 className="text-2xl font-black text-white">
+            Admin Security Access
+          </h1>
           <p className="text-gray-400 mt-2 text-sm">
-            Enter the authorized security password to open the administration control panel.
+            Enter the authorized security password to open the administration
+            control panel.
           </p>
 
           {authError && (
@@ -253,7 +286,6 @@ function AdminDashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-100 py-10 px-6">
       <div className="max-w-7xl mx-auto bg-white rounded-3xl shadow-2xl p-8 animate-fadeIn">
-        
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-8 border-b pb-6 gap-4">
           <div>
@@ -261,7 +293,8 @@ function AdminDashboard() {
               Admin Control Panel
             </h1>
             <p className="text-sm text-gray-500 mt-1">
-              Manage inventory, bookings, and monitor user activities in real-time from MongoDB.
+              Manage inventory, bookings, and monitor user activities in
+              real-time from MongoDB.
             </p>
           </div>
           <button
@@ -339,29 +372,48 @@ function AdminDashboard() {
               <div className="space-y-8 animate-fadeIn">
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
                   <div className="bg-slate-50 border border-slate-200 p-6 rounded-2xl shadow-sm text-center">
-                    <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">Total Users</p>
-                    <p className="text-4xl font-extrabold text-slate-800">{stats.totalUsers}</p>
+                    <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">
+                      Total Users
+                    </p>
+                    <p className="text-4xl font-extrabold text-slate-800">
+                      {stats.totalUsers}
+                    </p>
                   </div>
                   <div className="bg-slate-50 border border-slate-200 p-6 rounded-2xl shadow-sm text-center">
-                    <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">Total Bookings</p>
-                    <p className="text-4xl font-extrabold text-slate-800">{stats.totalBookings}</p>
+                    <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">
+                      Total Bookings
+                    </p>
+                    <p className="text-4xl font-extrabold text-slate-800">
+                      {stats.totalBookings}
+                    </p>
                   </div>
                   <div className="bg-slate-50 border border-slate-200 p-6 rounded-2xl shadow-sm text-center">
-                    <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">Total Vehicles</p>
-                    <p className="text-4xl font-extrabold text-slate-800">{stats.totalVehicles}</p>
+                    <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">
+                      Total Vehicles
+                    </p>
+                    <p className="text-4xl font-extrabold text-slate-800">
+                      {stats.totalVehicles}
+                    </p>
                   </div>
                   <div className="bg-slate-50 border border-slate-200 p-6 rounded-2xl shadow-sm text-center">
-                    <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">Available Inventory</p>
-                    <p className="text-4xl font-extrabold text-green-600">{stats.availableVehicles}</p>
+                    <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">
+                      Available Inventory
+                    </p>
+                    <p className="text-4xl font-extrabold text-green-600">
+                      {stats.availableVehicles}
+                    </p>
                   </div>
                 </div>
 
                 <div className="bg-slate-900 rounded-3xl p-8 text-white relative overflow-hidden">
                   <div className="absolute right-0 top-0 w-64 h-64 bg-green-500 rounded-full opacity-10 blur-3xl"></div>
-                  <h3 className="text-2xl font-bold mb-2">Real-Time Operations</h3>
+                  <h3 className="text-2xl font-bold mb-2">
+                    Real-Time Operations
+                  </h3>
                   <p className="text-gray-300 text-sm max-w-xl">
-                    Every register, login, booking creation, cancel request, and payment is tracked using the
-                    MongoDB activity logger. Navigate to the tabs to check records.
+                    Every register, login, booking creation, cancel request, and
+                    payment is tracked using the MongoDB activity logger.
+                    Navigate to the tabs to check records.
                   </p>
                 </div>
               </div>
@@ -371,7 +423,9 @@ function AdminDashboard() {
             {activeTab === "vehicles" && (
               <div className="space-y-6 animate-fadeIn">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-xl font-bold text-slate-800">Vehicles Directory</h3>
+                  <h3 className="text-xl font-bold text-slate-800">
+                    Vehicles Directory
+                  </h3>
                   <button
                     onClick={addVehicle}
                     className="bg-green-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md hover:bg-green-700 cursor-pointer transition"
@@ -380,12 +434,14 @@ function AdminDashboard() {
                   </button>
                 </div>
                 {vehicles.length === 0 ? (
-                  <p className="text-center py-10 text-gray-500">No vehicles found in database.</p>
+                  <p className="text-center py-10 text-gray-500">
+                    No vehicles found in database.
+                  </p>
                 ) : (
-                  <AdminVehicleTable 
-                    vehicles={vehicles} 
-                    deleteVehicle={deleteVehicle} 
-                    editVehicle={(vehicle) => setEditingVehicle(vehicle)} 
+                  <AdminVehicleTable
+                    vehicles={vehicles}
+                    deleteVehicle={deleteVehicle}
+                    editVehicle={(vehicle) => setEditingVehicle(vehicle)}
                   />
                 )}
               </div>
@@ -394,9 +450,13 @@ function AdminDashboard() {
             {/* TAB 3: BOOKINGS MANAGEMENT */}
             {activeTab === "bookings" && (
               <div className="space-y-6 animate-fadeIn">
-                <h3 className="text-xl font-bold text-slate-800">Booking Records</h3>
+                <h3 className="text-xl font-bold text-slate-800">
+                  Booking Records
+                </h3>
                 {bookings.length === 0 ? (
-                  <p className="text-center py-10 text-gray-500">No bookings placed in the database yet.</p>
+                  <p className="text-center py-10 text-gray-500">
+                    No bookings placed in the database yet.
+                  </p>
                 ) : (
                   <div className="overflow-x-auto bg-white border rounded-2xl shadow-sm">
                     <table className="w-full text-left border-collapse">
@@ -413,27 +473,45 @@ function AdminDashboard() {
                       </thead>
                       <tbody className="text-xs">
                         {bookings.map((b) => (
-                          <tr key={b._id} className="border-b hover:bg-slate-50">
-                            <td className="p-4 font-mono text-gray-400">{b._id}</td>
+                          <tr
+                            key={b._id}
+                            className="border-b hover:bg-slate-50"
+                          >
+                            <td className="p-4 font-mono text-gray-400">
+                              {b._id}
+                            </td>
                             <td className="p-4 font-bold text-slate-800">
                               {b.userName || (b.user && b.user.name) || "N/A"}
-                              <span className="block text-[10px] text-gray-400 font-normal">{b.user && b.user.email}</span>
+                              <span className="block text-[10px] text-gray-400 font-normal">
+                                {b.user && b.user.email}
+                              </span>
                             </td>
                             <td className="p-4 font-medium text-slate-700">
-                              {b.vehicleName || (b.vehicle ? b.vehicle.name : "Deleted Vehicle")}
-                              <span className="block text-[10px] text-gray-400 font-normal">{b.vehicle && b.vehicle.brand}</span>
+                              {b.vehicleName ||
+                                (b.vehicle
+                                  ? b.vehicle.name
+                                  : "Deleted Vehicle")}
+                              <span className="block text-[10px] text-gray-400 font-normal">
+                                {b.vehicle && b.vehicle.brand}
+                              </span>
                             </td>
-                            <td className="p-4 text-gray-500">{new Date(b.startDate).toLocaleDateString()}</td>
-                            <td className="p-4 text-gray-500">{new Date(b.endDate).toLocaleDateString()}</td>
-                            <td className="p-4 font-bold text-slate-800">₹{b.amount}</td>
+                            <td className="p-4 text-gray-500">
+                              {new Date(b.startDate).toLocaleDateString()}
+                            </td>
+                            <td className="p-4 text-gray-500">
+                              {new Date(b.endDate).toLocaleDateString()}
+                            </td>
+                            <td className="p-4 font-bold text-slate-800">
+                              ₹{b.amount}
+                            </td>
                             <td className="p-4">
                               <span
                                 className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${
                                   b.status === "Paid"
                                     ? "bg-green-100 text-green-800"
                                     : b.status === "Cancelled"
-                                    ? "bg-red-100 text-red-800"
-                                    : "bg-amber-100 text-amber-800"
+                                      ? "bg-red-100 text-red-800"
+                                      : "bg-amber-100 text-amber-800"
                                 }`}
                               >
                                 {b.status}
@@ -452,13 +530,18 @@ function AdminDashboard() {
             {activeTab === "logs" && (
               <div className="space-y-6 animate-fadeIn">
                 <div>
-                  <h3 className="text-xl font-bold text-slate-800">MongoDB User Activity Log</h3>
+                  <h3 className="text-xl font-bold text-slate-800">
+                    MongoDB User Activity Log
+                  </h3>
                   <p className="text-xs text-gray-400 mt-1">
-                    System-wide audit trail. Logs all user registers, logins, booking requests, cancels, and QR payments in MongoDB.
+                    System-wide audit trail. Logs all user registers, logins,
+                    booking requests, cancels, and QR payments in MongoDB.
                   </p>
                 </div>
                 {activities.length === 0 ? (
-                  <p className="text-center py-10 text-gray-500">No activity logs found in database.</p>
+                  <p className="text-center py-10 text-gray-500">
+                    No activity logs found in database.
+                  </p>
                 ) : (
                   <div className="overflow-x-auto bg-white border border-gray-200 rounded-2xl shadow-sm max-h-[500px]">
                     <table className="w-full text-left border-collapse table-fixed">
@@ -472,11 +555,20 @@ function AdminDashboard() {
                       </thead>
                       <tbody className="text-[11px] font-medium text-slate-700">
                         {activities.map((act) => (
-                          <tr key={act._id} className="border-b hover:bg-slate-50 transition">
-                            <td className="p-3 text-gray-500 font-normal">{formatDate(act.createdAt)}</td>
+                          <tr
+                            key={act._id}
+                            className="border-b hover:bg-slate-50 transition"
+                          >
+                            <td className="p-3 text-gray-500 font-normal">
+                              {formatDate(act.createdAt)}
+                            </td>
                             <td className="p-3 font-semibold text-slate-800">
                               {act.username}
-                              {act.email && <span className="block text-[9px] text-gray-400 font-normal truncate">{act.email}</span>}
+                              {act.email && (
+                                <span className="block text-[9px] text-gray-400 font-normal truncate">
+                                  {act.email}
+                                </span>
+                              )}
                             </td>
                             <td className="p-3">
                               <span
@@ -484,20 +576,23 @@ function AdminDashboard() {
                                   act.action === "REGISTER"
                                     ? "bg-blue-100 text-blue-800"
                                     : act.action === "LOGIN"
-                                    ? "bg-purple-100 text-purple-800"
-                                    : act.action === "CREATE_BOOKING"
-                                    ? "bg-amber-100 text-amber-800"
-                                    : act.action === "CANCEL_BOOKING"
-                                    ? "bg-red-100 text-red-800"
-                                    : act.action === "PAYMENT"
-                                    ? "bg-green-100 text-green-800"
-                                    : "bg-slate-100 text-slate-800"
+                                      ? "bg-purple-100 text-purple-800"
+                                      : act.action === "CREATE_BOOKING"
+                                        ? "bg-amber-100 text-amber-800"
+                                        : act.action === "CANCEL_BOOKING"
+                                          ? "bg-red-100 text-red-800"
+                                          : act.action === "PAYMENT"
+                                            ? "bg-green-100 text-green-800"
+                                            : "bg-slate-100 text-slate-800"
                                 }`}
                               >
                                 {act.action}
                               </span>
                             </td>
-                            <td className="p-3 text-gray-600 truncate" title={act.details}>
+                            <td
+                              className="p-3 text-gray-600 truncate"
+                              title={act.details}
+                            >
                               {act.details}
                             </td>
                           </tr>
@@ -513,33 +608,56 @@ function AdminDashboard() {
         {editingVehicle && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 animate-fadeIn">
             <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl border border-gray-100">
-              <h3 className="text-2xl font-extrabold text-slate-800 mb-6">Edit Vehicle</h3>
+              <h3 className="text-2xl font-extrabold text-slate-800 mb-6">
+                Edit Vehicle
+              </h3>
               <form onSubmit={handleEditSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-gray-700 text-sm font-semibold mb-1">Vehicle Name</label>
+                  <label className="block text-gray-700 text-sm font-semibold mb-1">
+                    Vehicle Name
+                  </label>
                   <input
                     type="text"
                     value={editingVehicle.name}
-                    onChange={(e) => setEditingVehicle({ ...editingVehicle, name: e.target.value })}
+                    onChange={(e) =>
+                      setEditingVehicle({
+                        ...editingVehicle,
+                        name: e.target.value,
+                      })
+                    }
                     className="w-full border border-gray-300 p-2.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 transition"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-semibold mb-1">Brand</label>
+                  <label className="block text-gray-700 text-sm font-semibold mb-1">
+                    Brand
+                  </label>
                   <input
                     type="text"
                     value={editingVehicle.brand}
-                    onChange={(e) => setEditingVehicle({ ...editingVehicle, brand: e.target.value })}
+                    onChange={(e) =>
+                      setEditingVehicle({
+                        ...editingVehicle,
+                        brand: e.target.value,
+                      })
+                    }
                     className="w-full border border-gray-300 p-2.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 transition"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-semibold mb-1">Type</label>
+                  <label className="block text-gray-700 text-sm font-semibold mb-1">
+                    Type
+                  </label>
                   <select
                     value={editingVehicle.type}
-                    onChange={(e) => setEditingVehicle({ ...editingVehicle, type: e.target.value })}
+                    onChange={(e) =>
+                      setEditingVehicle({
+                        ...editingVehicle,
+                        type: e.target.value,
+                      })
+                    }
                     className="w-full border border-gray-300 p-2.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 transition"
                     required
                   >
@@ -548,21 +666,35 @@ function AdminDashboard() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-semibold mb-1">Price per Day (₹)</label>
+                  <label className="block text-gray-700 text-sm font-semibold mb-1">
+                    Price per Day (₹)
+                  </label>
                   <input
                     type="number"
                     value={editingVehicle.price}
-                    onChange={(e) => setEditingVehicle({ ...editingVehicle, price: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setEditingVehicle({
+                        ...editingVehicle,
+                        price: Number(e.target.value),
+                      })
+                    }
                     className="w-full border border-gray-300 p-2.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 transition"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-semibold mb-1">Image Path</label>
+                  <label className="block text-gray-700 text-sm font-semibold mb-1">
+                    Image Path
+                  </label>
                   <input
                     type="text"
                     value={editingVehicle.image}
-                    onChange={(e) => setEditingVehicle({ ...editingVehicle, image: e.target.value })}
+                    onChange={(e) =>
+                      setEditingVehicle({
+                        ...editingVehicle,
+                        image: e.target.value,
+                      })
+                    }
                     className="w-full border border-gray-300 p-2.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 transition"
                     required
                   />
@@ -572,10 +704,18 @@ function AdminDashboard() {
                     type="checkbox"
                     id="edit-available"
                     checked={editingVehicle.available}
-                    onChange={(e) => setEditingVehicle({ ...editingVehicle, available: e.target.checked })}
+                    onChange={(e) =>
+                      setEditingVehicle({
+                        ...editingVehicle,
+                        available: e.target.checked,
+                      })
+                    }
                     className="w-5 h-5 accent-green-600 rounded focus:ring-2 focus:ring-green-500"
                   />
-                  <label htmlFor="edit-available" className="text-sm font-semibold text-gray-700 cursor-pointer">
+                  <label
+                    htmlFor="edit-available"
+                    className="text-sm font-semibold text-gray-700 cursor-pointer"
+                  >
                     Available for rent
                   </label>
                 </div>

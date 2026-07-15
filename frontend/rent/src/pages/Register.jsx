@@ -22,13 +22,16 @@ function Register() {
     setSuccess("");
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        "https://quick-wheels-oua9.onrender.com/api/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name, email, password }),
         },
-        body: JSON.stringify({ name, email, password }),
-      });
+      );
 
       const data = await response.json();
 
@@ -125,7 +128,10 @@ function Register() {
 
         <p className="mt-6 text-center text-sm text-gray-600">
           Already have an account?{" "}
-          <Link to="/login" className="text-green-600 font-semibold hover:underline">
+          <Link
+            to="/login"
+            className="text-green-600 font-semibold hover:underline"
+          >
             Login
           </Link>
         </p>

@@ -12,11 +12,14 @@ function RentalHistory() {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/bookings/my", {
-          headers: {
-            Authorization: `Bearer ${token}`,
+        const response = await fetch(
+          "https://quick-wheels-oua9.onrender.com/api/bookings/my",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        });
+        );
 
         if (!response.ok) {
           throw new Error("Failed to fetch booking history");
@@ -67,8 +70,12 @@ function RentalHistory() {
             </div>
           ) : bookings.length === 0 ? (
             <div className="text-center py-20 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-500">No History Available</h2>
-              <p className="text-gray-400 mt-1">Your booking records will appear here.</p>
+              <h2 className="text-xl font-semibold text-gray-500">
+                No History Available
+              </h2>
+              <p className="text-gray-400 mt-1">
+                Your booking records will appear here.
+              </p>
             </div>
           ) : (
             <div className="overflow-x-auto bg-white border border-gray-150 rounded-2xl shadow-sm">
@@ -84,24 +91,35 @@ function RentalHistory() {
                 </thead>
                 <tbody>
                   {bookings.map((booking) => (
-                    <tr key={booking._id} className="border-b border-gray-100 hover:bg-slate-50 transition-colors">
+                    <tr
+                      key={booking._id}
+                      className="border-b border-gray-100 hover:bg-slate-50 transition-colors"
+                    >
                       <td className="p-4 font-semibold text-gray-800">
                         {booking.vehicle.name}
-                        <span className="block text-xs font-normal text-gray-400">{booking.vehicle.brand}</span>
+                        <span className="block text-xs font-normal text-gray-400">
+                          {booking.vehicle.brand}
+                        </span>
                       </td>
-                      <td className="p-4 text-gray-600 font-medium">{formatDate(booking.startDate)}</td>
-                      <td className="p-4 text-gray-600 font-medium">{formatDate(booking.endDate)}</td>
-                      <td className="p-4 font-bold text-slate-800">₹{booking.amount}</td>
+                      <td className="p-4 text-gray-600 font-medium">
+                        {formatDate(booking.startDate)}
+                      </td>
+                      <td className="p-4 text-gray-600 font-medium">
+                        {formatDate(booking.endDate)}
+                      </td>
+                      <td className="p-4 font-bold text-slate-800">
+                        ₹{booking.amount}
+                      </td>
                       <td className="p-4">
                         <span
                           className={`text-xs px-2.5 py-1 rounded-full font-bold uppercase tracking-wider ${
                             booking.status === "Paid"
                               ? "bg-green-100 text-green-800"
                               : booking.status === "Cancelled"
-                              ? "bg-red-100 text-red-800"
-                              : booking.status === "Completed"
-                              ? "bg-blue-100 text-blue-800"
-                              : "bg-amber-100 text-amber-800"
+                                ? "bg-red-100 text-red-800"
+                                : booking.status === "Completed"
+                                  ? "bg-blue-100 text-blue-800"
+                                  : "bg-amber-100 text-amber-800"
                           }`}
                         >
                           {booking.status}

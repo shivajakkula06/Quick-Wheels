@@ -12,7 +12,9 @@ function Home() {
   useEffect(() => {
     const fetchVehicles = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/vehicles");
+        const response = await fetch(
+          "https://quick-wheels-oua9.onrender.com/api/vehicles",
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch vehicles");
         }
@@ -26,13 +28,16 @@ function Home() {
           type: v.type,
           price: v.pricePerDay,
           image: v.image,
-          available: v.available
+          available: v.available,
         }));
 
         setVehicles(mappedData);
         setBackendStatus("connected");
       } catch (err) {
-        console.warn("Backend unavailable, falling back to static vehicles:", err.message);
+        console.warn(
+          "Backend unavailable, falling back to static vehicles:",
+          err.message,
+        );
         setVehicles(localVehicles);
         setBackendStatus("fallback");
       } finally {
@@ -52,7 +57,6 @@ function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-100 py-10 px-6">
       <div className="max-w-7xl mx-auto bg-white rounded-3xl shadow-2xl p-8 animate-fadeIn">
-
         {/* Status Indicator */}
         <div className="flex justify-end mb-4">
           {backendStatus === "connected" ? (
@@ -77,26 +81,45 @@ function Home() {
         <div className="flex flex-col md:flex-row items-center justify-between border-b pb-8">
           <div className="flex-1">
             <h1 className="text-5xl font-bold">
-              Rent Cars &
-              <span className="text-green-600"> Bikes</span>
+              Rent Cars &<span className="text-green-600"> Bikes</span>
             </h1>
 
             <p className="mt-5 text-gray-600 text-lg">
-              Choose from a wide range of cars and bikes.
-              Book your favourite vehicle safely and at affordable prices.
+              Choose from a wide range of cars and bikes. Book your favourite
+              vehicle safely and at affordable prices.
             </p>
 
             {/* Location Information */}
             <div className="mt-6 flex items-center gap-3 bg-green-50 border border-green-200 rounded-2xl p-4 w-fit shadow-sm">
               <div className="p-2 bg-green-600 rounded-xl text-white">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                  ></path>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                  ></path>
                 </svg>
               </div>
               <div>
-                <p className="text-xs uppercase tracking-wider text-green-700 font-extrabold">Vehicle Available Location</p>
-                <p className="text-slate-800 font-bold text-base">Yamnampet, Ghatkesar</p>
+                <p className="text-xs uppercase tracking-wider text-green-700 font-extrabold">
+                  Vehicle Available Location
+                </p>
+                <p className="text-slate-800 font-bold text-base">
+                  Yamnampet, Ghatkesar
+                </p>
               </div>
             </div>
 
@@ -134,9 +157,7 @@ function Home() {
 
         {/* Available Vehicles */}
         <div>
-          <h2 className="text-3xl font-bold mb-8">
-            Available Vehicles
-          </h2>
+          <h2 className="text-3xl font-bold mb-8">Available Vehicles</h2>
 
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20">

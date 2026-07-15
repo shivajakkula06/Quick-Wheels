@@ -43,13 +43,16 @@ function MyBookings() {
       setProcessingBookingId(bookingId);
 
       try {
-        const response = await fetch(`http://localhost:5000/api/bookings/${bookingId}/pay`, {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
+        const response = await fetch(
+          `https://quick-wheels-oua9.onrender.com/api/bookings/${bookingId}/pay`,
+          {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
           },
-        });
+        );
 
         if (!response.ok) {
           throw new Error("Payment processing failed");
@@ -67,11 +70,14 @@ function MyBookings() {
 
   const fetchBookings = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/bookings/my", {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        "https://quick-wheels-oua9.onrender.com/api/bookings/my",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       if (!response.ok) {
         throw new Error("Failed to fetch bookings");
@@ -80,7 +86,7 @@ function MyBookings() {
       const data = await response.json();
       // Filter out Cancelled and Completed for the active page, show only Booked & Paid
       const activeBookings = data.filter(
-        (b) => b.status === "Booked" || b.status === "Paid"
+        (b) => b.status === "Booked" || b.status === "Paid",
       );
       setBookings(activeBookings);
     } catch (err) {
@@ -106,12 +112,15 @@ function MyBookings() {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/api/bookings/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        `https://quick-wheels-oua9.onrender.com/api/bookings/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       if (!response.ok) {
         throw new Error("Failed to cancel booking");
@@ -159,9 +168,16 @@ function MyBookings() {
             </div>
           ) : bookings.length === 0 ? (
             <div className="text-center py-20 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-500 mb-2">No Active Bookings Found</h2>
-              <p className="text-gray-400 mb-6">Need a ride? Go to Home to book a car or bike!</p>
-              <Link to="/" className="bg-green-600 text-white px-6 py-2.5 rounded-xl font-bold">
+              <h2 className="text-xl font-semibold text-gray-500 mb-2">
+                No Active Bookings Found
+              </h2>
+              <p className="text-gray-400 mb-6">
+                Need a ride? Go to Home to book a car or bike!
+              </p>
+              <Link
+                to="/"
+                className="bg-green-600 text-white px-6 py-2.5 rounded-xl font-bold"
+              >
                 Book Now
               </Link>
             </div>
@@ -179,12 +195,19 @@ function MyBookings() {
                     <div>
                       <div className="flex justify-between items-start mb-4">
                         <div>
-                          <span className="text-xs text-gray-400 font-medium">Booking ID: {booking._id}</span>
+                          <span className="text-xs text-gray-400 font-medium">
+                            Booking ID: {booking._id}
+                          </span>
                           <h2 className="text-2xl font-bold text-slate-800 mt-0.5">
-                            {booking.vehicleName || (booking.vehicle ? booking.vehicle.name : "Deleted Vehicle")}
+                            {booking.vehicleName ||
+                              (booking.vehicle
+                                ? booking.vehicle.name
+                                : "Deleted Vehicle")}
                           </h2>
                           <span className="text-sm text-gray-500 font-medium capitalize">
-                            {booking.vehicle ? `${booking.vehicle.brand} (${booking.vehicle.type})` : ""}
+                            {booking.vehicle
+                              ? `${booking.vehicle.brand} (${booking.vehicle.type})`
+                              : ""}
                           </span>
                         </div>
                         <span
@@ -194,24 +217,34 @@ function MyBookings() {
                               : "bg-amber-100 text-amber-800 animate-pulse"
                           }`}
                         >
-                          {booking.status === "Paid" ? "Paid" : "Pending Payment"}
+                          {booking.status === "Paid"
+                            ? "Paid"
+                            : "Pending Payment"}
                         </span>
                       </div>
 
                       <div className="grid grid-cols-2 gap-4 border-t border-b py-4 my-4 border-gray-100 text-sm">
                         <div>
                           <p className="text-gray-400 text-xs">PICKUP DATE</p>
-                          <p className="font-semibold text-gray-700">{formatDate(booking.startDate)}</p>
+                          <p className="font-semibold text-gray-700">
+                            {formatDate(booking.startDate)}
+                          </p>
                         </div>
                         <div>
                           <p className="text-gray-400 text-xs">RETURN DATE</p>
-                          <p className="font-semibold text-gray-700">{formatDate(booking.endDate)}</p>
+                          <p className="font-semibold text-gray-700">
+                            {formatDate(booking.endDate)}
+                          </p>
                         </div>
                       </div>
 
                       <div className="flex justify-between items-center mb-4">
-                        <span className="text-gray-500 font-medium">Total Price</span>
-                        <span className="text-2xl font-black text-green-600">₹{booking.amount}</span>
+                        <span className="text-gray-500 font-medium">
+                          Total Price
+                        </span>
+                        <span className="text-2xl font-black text-green-600">
+                          ₹{booking.amount}
+                        </span>
                       </div>
                     </div>
 
@@ -221,11 +254,13 @@ function MyBookings() {
                           <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
                             Scan QR / Pay Now
                           </h4>
-                          
+
                           {scanningBookingId === booking._id ? (
                             <div className="relative w-28 h-28 mx-auto sm:mx-0 border-2 border-slate-700 bg-slate-900 rounded-lg flex items-center justify-center overflow-hidden my-2">
                               <div className="absolute left-0 w-full h-0.5 bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)] animate-scannerLine"></div>
-                              <span className="text-[10px] text-green-400 font-bold animate-pulse">Scanning...</span>
+                              <span className="text-[10px] text-green-400 font-bold animate-pulse">
+                                Scanning...
+                              </span>
                             </div>
                           ) : processingBookingId === booking._id ? (
                             <div className="text-xs text-green-600 font-semibold my-3 flex items-center justify-center sm:justify-start gap-1.5">
@@ -235,11 +270,14 @@ function MyBookings() {
                           ) : (
                             <>
                               <p className="text-xs text-gray-400 max-w-[200px]">
-                                Scan this UPI QR code using your app or use our simulated scanner to pay instantly.
+                                Scan this UPI QR code using your app or use our
+                                simulated scanner to pay instantly.
                               </p>
                               <div className="mt-3 flex gap-2 justify-center sm:justify-start">
                                 <button
-                                  onClick={() => simulateScanAndPay(booking._id)}
+                                  onClick={() =>
+                                    simulateScanAndPay(booking._id)
+                                  }
                                   className="text-xs bg-slate-800 text-white font-bold px-3 py-1.5 rounded-lg hover:bg-slate-700 transition cursor-pointer"
                                 >
                                   Simulate Pay (Scan Now)
@@ -270,8 +308,18 @@ function MyBookings() {
                       )}
                       {booking.status === "Paid" && (
                         <div className="w-full py-2.5 text-center text-green-700 bg-green-50 border border-green-200 rounded-xl text-sm font-bold flex justify-center items-center gap-1.5">
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2.5"
+                              d="M5 13l4 4L19 7"
+                            />
                           </svg>
                           Payment Completed
                         </div>

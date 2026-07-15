@@ -19,9 +19,12 @@ function Scanner() {
   useEffect(() => {
     const fetchUnpaidBookings = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/bookings/my", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await fetch(
+          "https://quick-wheels-oua9.onrender.com/api/bookings/my",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        );
         if (!response.ok) throw new Error("Failed to fetch bookings");
         const data = await response.json();
         const unpaid = data.filter((b) => b.status === "Booked");
@@ -29,7 +32,9 @@ function Scanner() {
 
         // Pre-select if passed in navigation state
         if (location.state && location.state.bookingId) {
-          const matched = unpaid.find((b) => b._id === location.state.bookingId);
+          const matched = unpaid.find(
+            (b) => b._id === location.state.bookingId,
+          );
           if (matched) {
             setSelectedBookingId(matched._id);
           } else if (unpaid.length > 0) {
@@ -91,7 +96,9 @@ function Scanner() {
       playBeep();
       setScanResult({
         bookingId: booking._id,
-        vehicleName: booking.vehicleName || (booking.vehicle ? booking.vehicle.name : "Deleted Vehicle"),
+        vehicleName:
+          booking.vehicleName ||
+          (booking.vehicle ? booking.vehicle.name : "Deleted Vehicle"),
         brand: booking.vehicle ? booking.vehicle.brand : "N/A",
         amount: booking.amount,
         userName: booking.userName,
@@ -108,14 +115,14 @@ function Scanner() {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/bookings/${scanResult.bookingId}/pay`,
+        `https://quick-wheels-oua9.onrender.com/api/bookings/${scanResult.bookingId}/pay`,
         {
           method: "PUT",
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       const data = await response.json();
@@ -142,7 +149,8 @@ function Scanner() {
           QR Payment Scanner
         </h1>
         <p className="text-gray-500 text-center mb-8 text-sm max-w-lg mx-auto">
-          Scan the booking QR code to complete your payment instantly. Select a booking from the simulator or use a webcam scan.
+          Scan the booking QR code to complete your payment instantly. Select a
+          booking from the simulator or use a webcam scan.
         </p>
 
         {error && (
@@ -155,7 +163,6 @@ function Scanner() {
           {/* Left Column: Viewfinder / Scanner Animation */}
           <div className="flex flex-col items-center justify-center">
             <div className="relative w-72 h-72 rounded-3xl border-4 border-slate-700 bg-slate-900 shadow-2xl flex flex-col items-center justify-center overflow-hidden">
-              
               {/* Camera Corners overlay */}
               <div className="absolute top-4 left-4 w-6 h-6 border-t-4 border-l-4 border-green-500 rounded-tl"></div>
               <div className="absolute top-4 right-4 w-6 h-6 border-t-4 border-r-4 border-green-500 rounded-tr"></div>
@@ -169,31 +176,73 @@ function Scanner() {
 
               {success ? (
                 <div className="text-center animate-bounce text-green-500 z-10 flex flex-col items-center">
-                  <svg className="w-16 h-16 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <svg
+                    className="w-16 h-16 mb-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="3"
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
-                  <span className="font-bold text-sm text-white">Payment Success!</span>
+                  <span className="font-bold text-sm text-white">
+                    Payment Success!
+                  </span>
                 </div>
               ) : scanning ? (
                 <div className="text-center text-white z-10">
-                  <p className="text-xs tracking-widest text-green-400 uppercase animate-pulse font-bold">Scanning...</p>
-                  <p className="text-[10px] text-gray-400 mt-1">Align QR Code in Frame</p>
+                  <p className="text-xs tracking-widest text-green-400 uppercase animate-pulse font-bold">
+                    Scanning...
+                  </p>
+                  <p className="text-[10px] text-gray-400 mt-1">
+                    Align QR Code in Frame
+                  </p>
                 </div>
               ) : scanResult ? (
                 <div className="text-center text-green-400 z-10 p-4">
-                  <svg className="w-12 h-12 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 4v1m6 11h.01M5.938 9.5a7.5 7.5 0 1112.124 0H5.938z" />
+                  <svg
+                    className="w-12 h-12 mx-auto mb-1"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2.5"
+                      d="M12 4v1m6 11h.01M5.938 9.5a7.5 7.5 0 1112.124 0H5.938z"
+                    />
                   </svg>
-                  <p className="text-xs font-bold uppercase tracking-wider">QR Code Read</p>
-                  <p className="text-[10px] text-white mt-1 font-mono truncate max-w-[200px] mx-auto">{scanResult.rawCode}</p>
+                  <p className="text-xs font-bold uppercase tracking-wider">
+                    QR Code Read
+                  </p>
+                  <p className="text-[10px] text-white mt-1 font-mono truncate max-w-[200px] mx-auto">
+                    {scanResult.rawCode}
+                  </p>
                 </div>
               ) : (
                 <div className="text-center text-gray-500 p-6 z-10 flex flex-col items-center">
-                  <svg className="w-12 h-12 mb-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 4v1m6 11h.01M5.938 9.5a7.5 7.5 0 1112.124 0H5.938z" />
+                  <svg
+                    className="w-12 h-12 mb-2 text-gray-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.5"
+                      d="M12 4v1m6 11h.01M5.938 9.5a7.5 7.5 0 1112.124 0H5.938z"
+                    />
                   </svg>
                   <p className="text-xs font-semibold">Scanner Standby</p>
-                  <p className="text-[10px] mt-1 text-gray-500">Select booking and click Scan</p>
+                  <p className="text-[10px] mt-1 text-gray-500">
+                    Select booking and click Scan
+                  </p>
                 </div>
               )}
             </div>
@@ -208,9 +257,12 @@ function Scanner() {
 
             {success ? (
               <div className="text-center py-6">
-                <h4 className="text-xl font-bold text-green-700 mb-2">🎉 Thank You!</h4>
+                <h4 className="text-xl font-bold text-green-700 mb-2">
+                  🎉 Thank You!
+                </h4>
                 <p className="text-sm text-gray-500">
-                  Your booking has been paid successfully. Redirecting you back to active bookings...
+                  Your booking has been paid successfully. Redirecting you back
+                  to active bookings...
                 </p>
               </div>
             ) : (
@@ -221,7 +273,8 @@ function Scanner() {
                   </label>
                   {bookings.length === 0 ? (
                     <div className="bg-amber-50 text-amber-800 text-xs p-3 rounded-lg border border-amber-200">
-                      No unpaid bookings found in your database. Go book a vehicle first!
+                      No unpaid bookings found in your database. Go book a
+                      vehicle first!
                     </div>
                   ) : (
                     <select
@@ -234,7 +287,11 @@ function Scanner() {
                     >
                       {bookings.map((b) => (
                         <option key={b._id} value={b._id}>
-                          {b.vehicleName || (b.vehicle ? b.vehicle.name : "Deleted Vehicle")} (Amount: ₹{b.amount})
+                          {b.vehicleName ||
+                            (b.vehicle
+                              ? b.vehicle.name
+                              : "Deleted Vehicle")}{" "}
+                          (Amount: ₹{b.amount})
                         </option>
                       ))}
                     </select>
@@ -257,11 +314,24 @@ function Scanner() {
                       Decoded Payment Details
                     </h4>
                     <div className="space-y-1.5 text-xs text-slate-700">
-                      <p><strong>Booking ID:</strong> <span className="font-mono text-[10px] text-gray-500">{scanResult.bookingId}</span></p>
-                      <p><strong>Customer Name:</strong> {scanResult.userName}</p>
-                      <p><strong>Vehicle:</strong> {scanResult.vehicleName} ({scanResult.brand})</p>
+                      <p>
+                        <strong>Booking ID:</strong>{" "}
+                        <span className="font-mono text-[10px] text-gray-500">
+                          {scanResult.bookingId}
+                        </span>
+                      </p>
+                      <p>
+                        <strong>Customer Name:</strong> {scanResult.userName}
+                      </p>
+                      <p>
+                        <strong>Vehicle:</strong> {scanResult.vehicleName} (
+                        {scanResult.brand})
+                      </p>
                       <p className="text-sm font-bold mt-1 text-slate-800">
-                        <strong>Amount Due:</strong> <span className="text-green-600">₹{scanResult.amount}</span>
+                        <strong>Amount Due:</strong>{" "}
+                        <span className="text-green-600">
+                          ₹{scanResult.amount}
+                        </span>
                       </p>
                     </div>
 

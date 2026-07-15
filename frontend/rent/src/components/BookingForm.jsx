@@ -6,7 +6,7 @@ function BookingForm({ vehicle }) {
   const [pickup, setPickup] = useState("");
   const [returnDate, setReturnDate] = useState("");
   const [loading, setLoading] = useState(false);
-  
+
   const { token, user } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -16,7 +16,7 @@ function BookingForm({ vehicle }) {
       const ret = new Date(returnDate);
       const timeDiff = ret.getTime() - pick.getTime();
       const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-      
+
       if (daysDiff > 0) {
         return daysDiff * vehicle.price;
       } else if (daysDiff === 0) {
@@ -27,7 +27,7 @@ function BookingForm({ vehicle }) {
   };
 
   const totalAmount = calculateTotalAmount();
-  
+
   const handleBooking = async () => {
     if (!user || !token) {
       alert("Please login to book a vehicle.");
@@ -48,19 +48,22 @@ function BookingForm({ vehicle }) {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5000/api/bookings", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        "https://quick-wheels-oua9.onrender.com/api/bookings",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            vehicleId: vehicle.id,
+            startDate: pickup,
+            endDate: returnDate,
+            amount: totalAmount,
+          }),
         },
-        body: JSON.stringify({
-          vehicleId: vehicle.id,
-          startDate: pickup,
-          endDate: returnDate,
-          amount: totalAmount,
-        }),
-      });
+      );
 
       const data = await response.json();
 
@@ -68,7 +71,9 @@ function BookingForm({ vehicle }) {
         throw new Error(data.message || "Failed to create booking");
       }
 
-      alert("Booking Confirmed! Please proceed to scan and pay on the next screen.");
+      alert(
+        "Booking Confirmed! Please proceed to scan and pay on the next screen.",
+      );
       navigate("/my-bookings");
     } catch (err) {
       alert(err.message);
@@ -94,22 +99,26 @@ function BookingForm({ vehicle }) {
       </p>
 
       <div className="mt-6">
-        <label className="block text-sm font-semibold text-slate-700">Pickup Date</label>
+        <label className="block text-sm font-semibold text-slate-700">
+          Pickup Date
+        </label>
         <input
           type="date"
           value={pickup}
-          onChange={(e)=>setPickup(e.target.value)}
+          onChange={(e) => setPickup(e.target.value)}
           className="border w-full rounded-xl p-3 mt-1.5 focus:outline-none focus:ring-2 focus:ring-green-500"
           required
         />
       </div>
 
       <div className="mt-4">
-        <label className="block text-sm font-semibold text-slate-700">Return Date</label>
+        <label className="block text-sm font-semibold text-slate-700">
+          Return Date
+        </label>
         <input
           type="date"
           value={returnDate}
-          onChange={(e)=>setReturnDate(e.target.value)}
+          onChange={(e) => setReturnDate(e.target.value)}
           className="border w-full rounded-xl p-3 mt-1.5 focus:outline-none focus:ring-2 focus:ring-green-500"
           required
         />
@@ -121,7 +130,8 @@ function BookingForm({ vehicle }) {
             Total Amount: ₹{totalAmount}
           </p>
           <p className="text-xs text-red-600 mt-2 text-center font-medium">
-            * Note: If you fail to return the vehicle on the scheduled date, an extra charge of 10% per hour will be applied.
+            * Note: If you fail to return the vehicle on the scheduled date, an
+            extra charge of 10% per hour will be applied.
           </p>
         </div>
       )}
